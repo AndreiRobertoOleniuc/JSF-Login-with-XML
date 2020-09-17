@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<root>
+  <gaestebuch>
+    <gast>
+      <id>1</id>
+      <name>Andrei</name>
+      <datum>2020-02-21</datum>
+      <uhrzeit>10:20</uhrzeit>
+      <nachricht>5 Sterne bewertung</nachricht>
+    </gast>
+    <gast>
+      <id>2</id>
+      <name>Carmen</name>
+      <datum>2020-03-21</datum>
+      <uhrzeit>20:20</uhrzeit>
+      <nachricht>2 Sterne essen schlecht</nachricht>
+    </gast>
+    <gast>
+      <id>3</id>
+      <name>Jordan</name>
+      <datum>2020-04-21</datum>
+      <uhrzeit>15:20</uhrzeit>
+      <nachricht>Toillette zu klein</nachricht>
+    </gast>
+    <gast>
+      <id>5</id>
+      <name>andrei</name>
+      <datum>2020-09-16</datum>
+      <uhrzeit>14:05</uhrzeit>
+      <nachricht>Bruder was das essen gut</nachricht>
+    </gast>
+    <gast>
+      <id>6</id>
+      <name>andrei</name>
+      <datum>2020-09-16</datum>
+      <uhrzeit>14:06</uhrzeit>
+      <nachricht>tes4</nachricht>
+    </gast>
+    <gast>
+      <id>7</id>
+      <name>andrei</name>
+      <datum>2020-09-16</datum>
+      <uhrzeit>14:08</uhrzeit>
+      <nachricht>test5</nachricht>
+    </gast>
+    <gast>
+      <id>8</id>
+      <name />
+      <datum>2020-09-16</datum>
+      <uhrzeit>14:12</uhrzeit>
+      <nachricht />
+    </gast>
+    <gast>
+      <id>9</id>
+      <name />
+      <datum>2020-09-16</datum>
+      <uhrzeit>14:12</uhrzeit>
+      <nachricht />
+    </gast>
+    <gast>
+      <id>10</id>
+      <name />
+      <datum>2020-09-16</datum>
+      <uhrzeit>14:14</uhrzeit>
+      <nachricht />
+    </gast>
+    <gast>
+      <id>11</id>
+      <name>andrei</name>
+      <datum>2020-09-16</datum>
+      <uhrzeit>14:15</uhrzeit>
+      <nachricht>tes29</nachricht>
+    </gast>
+    <gast>
+      <id>12</id>
+      <name>andrei</name>
+      <datum>2020-09-17</datum>
+      <uhrzeit>08:44</uhrzeit>
+      <nachricht>agsdghqd</nachricht>
+    </gast>
+    <gast>
+      <id>13</id>
+      <name>andrei</name>
+      <datum>2020-09-17</datum>
+      <uhrzeit>09:17</uhrzeit>
+      <nachricht>Franz wird schlimm</nachricht>
+    </gast>
+    <gast>
+      <id>14</id>
+      <name>andrei</name>
+      <datum>2020-09-17</datum>
+      <uhrzeit>11:19</uhrzeit>
+      <nachricht>123dqsa</nachricht>
+    </gast>
+  </gaestebuch>
+</root>
