@@ -8,15 +8,12 @@ package ch.nielsdavidandrei.loginjsf;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
-import org.jdom2.Document;
-import org.jdom2.Element;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
 
 /**
  *
@@ -26,12 +23,21 @@ import org.jdom2.input.SAXBuilder;
 @SessionScoped
 public class LoginUserBean implements Serializable {
 
+    @Size(min = 1, message = "Please enter the Username")
+    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username format is Wrong")
     private String username;
+
+    @Size(min = 1, message = "Please enter the Password")
+    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Password format is Wrong")
     private String password;
-    private boolean loggedIn;
+
+    @Size(min = 1, message = "Please enter the Message")
+    @Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Message format is Wrong")
     private String nachricht;
-    LoginDAO check;
-    List<Eintrag> eintrage;
+
+    private LoginDAO check;
+    private List<Eintrag> eintrage;
+    private boolean loggedIn;
 
     public String doLogin() throws JDOMException, IOException, ParseException {
         check = new LoginDAO();
