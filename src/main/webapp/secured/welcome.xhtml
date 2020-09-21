@@ -7,15 +7,25 @@
         <title>Secured welcome page</title>
     </h:head>
     <h:body>
-        <h:form>
-            <h:outputText value="Welcome, #{loginUserBean.username}!" />
-            <br/>   
-            <h:commandButton action="#{loginUserBean.doLogOut()}" value="Logout"/>  
-        </h:form>
+        <h:outputText value="Welcome, #{loginUserBean.username}!" />
         <h:form>
             <h:inputText value="#{loginUserBean.nachricht}"/>
-            <h:commandButton action="#{loginUserBean.eintragen()}" value="Eintragen"/>  
+            <h:commandButton action="#{loginUserBean.eintragen}" value="Eintragen"/>  
         </h:form>
+        <h:dataTable value="#{loginUserBean.eintrage}" var="o" id="list">
+            <h:column>
+                <h:outputText value="#{o.id}"/>
+            </h:column>
+            <h:column>
+                <h:outputText value="#{o.name}"/>
+            </h:column>
+            <h:column>
+                <h:outputText value="#{o.date}"/>
+            </h:column>
+            <h:column>
+                <h:outputText value="#{o.nachricht}"/>
+            </h:column>
+        </h:dataTable>
     </h:body>
 </html>
 

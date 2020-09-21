@@ -9,24 +9,9 @@ and open the template in the editor.
     <gast>
       <id>1</id>
       <name>Andrei</name>
-      <datum>2020-02-21</datum>
+      <datum>21/02/2020</datum>
       <uhrzeit>10:20</uhrzeit>
       <nachricht>5 Sterne bewertung</nachricht>
     </gast>
-    <gast>
-      <id>2</id>
-      <name>Carmen</name>
-      <datum>2020-03-21</datum>
-      <uhrzeit>20:20</uhrzeit>
-      <nachricht>2 Sterne essen schlecht</nachricht>
-    </gast>
-    <gast>
-      <id>3</id>
-      <name>Jordan</name>
-      <datum>2020-04-21</datum>
-      <uhrzeit>15:20</uhrzeit>
-      <nachricht>Toillette zu klein</nachricht>
-    </gast>
-    
   </gaestebuch>
 </root>

@@ -5,6 +5,7 @@
  */
 package ch.nielsdavidandrei.loginjsf;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
@@ -12,8 +13,11 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.faces.context.FacesContext;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -28,30 +32,32 @@ import org.jdom2.output.XMLOutputter;
  */
 public class LoginDAO {
 
-    private ArrayList<User> allUser = new ArrayList<>();
-    String path = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
-    private List list;
-
-    private ArrayList<Eintrag> gaeste = new ArrayList<>();
-    String path2 = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
-    private List list2;
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private final SAXBuilder builderBenutzer;
+    private final SAXBuilder builderEintraege;
+    private final File xmlFileBenutzer;
+    private final File xmlFileEintraege;
 
     public LoginDAO() throws JDOMException, IOException {
+        String path = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
+        path = path + "WEB-INF\\Data.xml";
+        xmlFileBenutzer = new File(path);
+        String pathB = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/");
+        pathB = pathB + "WEB-INF\\Gaestebuch.xml";
+        xmlFileEintraege = new File(pathB);
+        builderBenutzer = new SAXBuilder();
+        builderEintraege = new SAXBuilder();
     }
 
+    //Check Correct
     public Boolean check(String name, String password) throws JDOMException, IOException, ParseException {
-        path = path + "WEB-INF\\Data.xml";
-        Document doc = new SAXBuilder().build(path);
+        Document doc = (Document) builderBenutzer.build(xmlFileBenutzer);
         Element users = doc.getRootElement();
         Element benutzer = users.getChild("users");
-        list = benutzer.getChildren("nutzer");
+        List list = benutzer.getChildren("nutzer");
         for (int i = 0; i < list.size(); i++) {
             Element node = (Element) list.get(i);
-            int xmlid = Integer.parseInt(node.getChild("id").getText());
             String xmlname = node.getChild("name").getText();
             String xmlpassword = node.getChild("password").getText();
-            allUser.add(new User(xmlid, xmlname, xmlpassword));
             if (name.equals(xmlname) && password.equals(xmlpassword)) {
                 return true;
             }
@@ -59,62 +65,74 @@ public class LoginDAO {
         return false;
     }
 
-    public List<Eintrag> getData() throws JDOMException, IOException, ParseException {
-        path2 = path2 + "WEB-INF\\Gaestebuch.xml";
-        Document doc = new SAXBuilder().build(path2);
+    public List getData() throws JDOMException, IOException, ParseException {
+        List<Eintrag> gue;
+        gue = new ArrayList();
+        Document doc = (Document) builderEintraege.build(xmlFileEintraege);
         Element gaeste = doc.getRootElement();
         Element guest = gaeste.getChild("gaestebuch");
-        list2 = guest.getChildren("gast");
+        List list2 = guest.getChildren("gast");
         for (int i = 0; i < list2.size(); i++) {
             Element node = (Element) list2.get(i);
             int xmlid = Integer.parseInt(node.getChild("id").getText());
+
             String xmlname = node.getChild("name").getText();
-            Date xmldatum = format.parse(node.getChild("datum").getText() + " " + node.getChild("uhrzeit").getText());
+
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            String datumInString = node.getChildText("datum");
+            String timeInString = node.getChildText("uhrzeit");
+            Date xmldatum = formatter.parse(datumInString + " " + timeInString);
+
             String xmlnachricht = node.getChild("nachricht").getText();
-            this.gaeste.add(new Eintrag(xmlid, xmlname, xmldatum, xmlnachricht));
+            gue.add(new Eintrag(xmlid, xmlname, xmldatum, xmlnachricht));
         }
-        return this.gaeste;
+        return gue;
     }
 
-    public void setEintrag(String name, String nachricht) throws JDOMException, IOException {
-        path2 = path2 + "WEB-INF\\Gaestebuch.xml";
-        Document doc = new SAXBuilder().build(path2);
-        Element gaeste = doc.getRootElement();
+    public boolean setEintrag(String name, String nachricht) throws JDOMException, IOException {
+        Date today = Calendar.getInstance().getTime();
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        String datum = formatter.format(today);
+        formatter = new SimpleDateFormat("HH:mm");
+        String zeit = formatter.format(today);
+        Document document = (Document) builderEintraege.build(xmlFileEintraege);
+        Element gaeste = document.getRootElement();
         Element guest = gaeste.getChild("gaestebuch");
         Element gast = new Element("gast");
 
-        //ID
-        Element id = new Element("id");
-        int ident = guest.getChildren("gast").size() + 2;
-        String ausgabeid = Integer.toString(ident);
-        id.addContent(ausgabeid);
-        //Name
-        Element namexml = new Element("name");
-        namexml.addContent(name);
-        //Datum 
-        Element datum = new Element("datum");
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDateTime now = LocalDateTime.now();
-        datum.addContent(dtf.format(now));
-        //Uhrzeit
-        Element zeit = new Element("uhrzeit");
-        DateTimeFormatter form = DateTimeFormatter.ofPattern("HH:mm");
-        LocalDateTime smallTime = LocalDateTime.now();
-        zeit.addContent(form.format(smallTime));
-        //Nachricht
-        Element eintrag = new Element("nachricht");
-        eintrag.addContent(nachricht);
-        //Link them
-        gast.addContent(id);
-        gast.addContent(namexml);
-        gast.addContent(datum);
-        gast.addContent(zeit);
-        gast.addContent(eintrag);
-        //Link more
-        guest.addContent(gast);
+        gast.addContent(new Element("id").setText(Integer.toString(this.maxIdinXML() + 1)));
+        gast.addContent(new Element("name").setText(name));
+        gast.addContent(new Element("datum").setText(datum));
+        gast.addContent(new Element("uhrzeit").setText(zeit));
+        gast.addContent(new Element("nachricht").setText(nachricht));
 
+        guest.addContent(gast);
         XMLOutputter xmlOutput = new XMLOutputter();
         xmlOutput.setFormat(Format.getPrettyFormat());
-        xmlOutput.output(doc, new FileWriter("C:\\Users\\Andrei Oleniuc\\Desktop\\LoginJSF\\src\\main\\webapp\\WEB-INF\\Gaestebuch.xml"));
+        xmlOutput.output(document, new FileWriter(xmlFileEintraege));
+        return true;
+    }
+
+    //Hilfsmethode um max ID-Wert zu erhalten
+    private int maxIdinXML() {
+        //Vergleichswert setzen
+        int tmp = Integer.MAX_VALUE;
+        try {
+            Document document = (Document) builderEintraege.build(xmlFileEintraege);
+            Element rootNode = document.getRootElement();
+            Element guest = rootNode.getChild("gaestebuch");
+            List list = guest.getChildren("gast");
+            Element node = (Element) list.get(0);
+            tmp = Integer.parseInt(node.getChildText("id"));
+            for (int i = 1; i < list.size(); i++) {
+                node = (Element) list.get(i);
+                if (tmp < Integer.parseInt(node.getChildText("id"))) {
+                    tmp = Integer.parseInt(node.getChildText("id"));
+                }
+            }
+        } catch (JDOMException | IOException ex) {
+            Logger.getLogger(LoginDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return tmp;
     }
 }

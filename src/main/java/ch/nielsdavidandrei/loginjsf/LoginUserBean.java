@@ -33,14 +33,6 @@ public class LoginUserBean implements Serializable {
     LoginDAO check;
     List<Eintrag> eintrage;
 
-    public void setNachricht(String nachricht) {
-        this.nachricht = nachricht;
-    }
-
-    public String getNachricht() {
-        return nachricht;
-    }
-
     public String doLogin() throws JDOMException, IOException, ParseException {
         check = new LoginDAO();
         if (check.check(username, password)) {
@@ -51,25 +43,17 @@ public class LoginUserBean implements Serializable {
         }
     }
 
-    public void setEintrage() throws JDOMException, IOException, ParseException {
-        check = new LoginDAO();
-        eintrage = check.getData();
-    }
-
     public void eintragen() throws JDOMException, IOException {
-        check = new LoginDAO();
-        check.setEintrag(username, nachricht);
-    }
-
-    public List<Eintrag> getEintrage() {
-        return eintrage;
-    }
-
-    public String doLogOut() throws JDOMException, IOException, ParseException {
-        return "/start";
+        new LoginDAO().setEintrag(username, this.getNachricht());
+        this.setNachricht("");
     }
 
     // Getters & Setters
+    public List<Eintrag> getEintrage() throws JDOMException, IOException, ParseException {
+        this.eintrage = new LoginDAO().getData();
+        return eintrage;
+    }
+
     public boolean isLoggedIn() {
         return this.loggedIn;
     }
@@ -88,6 +72,14 @@ public class LoginUserBean implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public void setNachricht(String nachricht) {
+        this.nachricht = nachricht;
+    }
+
+    public String getNachricht() {
+        return nachricht;
     }
 
 }
